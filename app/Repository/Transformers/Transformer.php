@@ -1,4 +1,5 @@
-<?php namespace App\Repository\Transformers;
+<?php 
+namespace App\Repository\Transformers;
 
 /**
  * Created by PhpStorm.

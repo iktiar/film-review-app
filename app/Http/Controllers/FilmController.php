@@ -27,7 +27,7 @@ class FilmController extends ApiController
     public function __construct(FilmTransformer $filmTransformer)
     {
 
-        $this->FilmTransformer = $filmTransformer;
+        $this->filmTransformer = $filmTransformer;
 
     }
 
@@ -43,7 +43,7 @@ class FilmController extends ApiController
         $films = Film::with('user')->paginate($limit);
         
         return $this->respondWithPagination($films, [
-            'Films' => $this->FilmTransformer->transformCollection($films->all())
+            'Films' => $this->filmTransformer->transformCollection($films->all())
         ], 'Records Found!');
         
     }
@@ -72,7 +72,7 @@ class FilmController extends ApiController
             'status' => 'success',
             'status_code' => $this->getStatusCode(),
             'message' => 'Record Found',
-            'Film' => $this->FilmTransformer->transform($film)
+            'Film' => $this->filmTransformer->transform($film)
         ]);
         
 
@@ -89,14 +89,13 @@ class FilmController extends ApiController
 
             'api_token' => 'required',
             'name' => 'required',
-            'slug' => 'required|unique:Films',
+            'slug' => 'required|unique:films',
             'description' => 'required',
             'release_date' => 'required',
             'rating' => 'integer|required',
             'ticket_price' => 'required',
             'country' => 'required',
-            'photo' => 'required',
-            'user_id' => 'integer|required'
+            'photo' => 'required'
         );
 
         $validator = Validator::make($request->all(), $rules);
@@ -125,7 +124,8 @@ class FilmController extends ApiController
             $film->photo = $request['photo'];
             $film->save();
 
-            return $this->respondCreated('Film created successfully!', $this->FilmTransformer->transform($film));
+            return $this->respondCreated('Film created successfully!', 
+            	   $this->filmTransformer->transform($film));
 
         }catch(JWTException $e){
 
