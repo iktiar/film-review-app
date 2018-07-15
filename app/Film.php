@@ -30,23 +30,22 @@ class Film extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
-	{
-		return $this->belongsTo('App\Models\Access\User\User');
-	}
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function genres(){
-        return $this->belongsToMany('App\Models\Access\Genre\Genre', 'film_genres', 'film_id', 'genre_id');
+        return $this->belongsToMany('App\Genre', 'film_genres', 'film_id', 'genre_id');
     }
 
     /**
      * Get the comments for the film
      */
     public function comments() {
-        return $this->hasMany('App\Models\Access\Comment\Comment');
+        return $this->hasMany('App\Comment');
     }
 	
 }

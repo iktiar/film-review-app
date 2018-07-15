@@ -23,6 +23,13 @@ Route::group(['middleware' => 'cors', 'prefix' => '/v1'], function () {
     Route::get('/logout/{api_token}', 'UserController@logout');
 });
 
+Route::get('/films', 'FilmController@index');
+
+Route::get('/films/{id}', 'FilmController@show');
+
+Route::post('/films/create', 'FilmController@store');
+
+
 Route::get('/articles', 'ArticleController@index');
 
 Route::get('/articles/{id}', 'ArticleController@show');
