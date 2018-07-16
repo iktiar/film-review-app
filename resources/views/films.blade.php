@@ -15,23 +15,14 @@
         <script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
         <script src="bower_components/restangular/dist/restangular.min.js"></script>
          <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
-         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-        
+         <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
         <script src="backend/app.js"></script>
         <script src="backend/controllers.js"></script>
         <script src="backend/services.js"></script>
-
-        <style>
-            
-            li {
-                padding-bottom: 8px;
-            }
-
-        </style>
+        
     </head>
 
     <body>
-
         <div class="container">
             <div class="row">
                 <div class="col-md-12">

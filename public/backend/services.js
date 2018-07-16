@@ -37,27 +37,44 @@ bookWishlistAppServices.factory('userService', ['$http', 'localStorageService', 
 
 	function login(email, password, onSuccess, onError){
 
-		$http.post('/api/auth/login', 
+		$http.post('/api/v1/login', 
 		{
 			email: email,
 			password: password
 		}).
 		then(function(response) {
+            if(response.data.status =='error')
+            {   console.log('invalide');
 
-			localStorageService.set('token', response.data.token);
-			onSuccess(response);
-
+            	onError(response);
+            }
+			if(response.data.status =='success'){
+				localStorageService.set('token', response.data.data.api_token);
+                onSuccess(response);
+			}
 		}, function(response) {
-
-			onError(response);
 
 		});
 
 	}
 
 	function logout(){
+        $http.get('/api/v1/logout/'+getCurrentToken()).
+		then(function(response) {
+            if(response.data.status =='error')
+            {   console.log('logout error');
 
-		localStorageService.remove('token');
+            	onError(response);
+            }
+			if(response.data.status =='success'){
+				console.log('logout ok');
+				localStorageService.remove('token');
+                onSuccess(response);
+			}
+		}, function(response) {
+
+		});
+		
 
 	}
 

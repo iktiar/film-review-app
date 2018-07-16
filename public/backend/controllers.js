@@ -6,9 +6,14 @@ filmListAppControllers.controller('LoginController', ['$scope', '$http', '$locat
         userService.login(
             $scope.email, $scope.password,
             function(response){
+                $scope.isLoggedIn = true;
+                console.log('isLoggedIn ..');
+                console.log($scope.isLoggedIn);
                 $location.path('/');
             },
             function(response){
+                console.log('Errpr on login ..');
+                $scope.message = response.message;
                 alert('Something went wrong with the login process. Try again later!');
             }
         );
@@ -46,11 +51,47 @@ filmListAppControllers.controller('SignupController', ['$scope', '$location', 'u
 
 }]);
 
+filmListAppControllers.controller('CreateController', ['$scope', '$location', 'userService', function ($scope, $location, userService,) {
+
+    $scope.create = function(){
+ 
+        bookService.create({
+            name: $scope.name,
+            description: $scope.description,
+            ticket_price: $scope.ticket_price,
+            rating: $scope.rating,
+            release_date: $scope.release_date,
+            country: $scope.country,
+            genre: $scope.genre,
+            photo: $scope.photo
+        }, function(){
+
+            $scope.refresh();
+
+        }, function(){
+
+            alert('Some errors occurred while communicating with the service. Try again later.');
+
+        });
+
+    }
+
+}]);
+
 filmListAppControllers.controller('MainController', ['$scope', '$location', 'userService', 'bookService', function ($scope, $location, userService, bookService) {
 
     $scope.logout = function(){
         userService.logout();
+        $scope.isLoggedIn = false;
         $location.path('/login');
+    }
+
+    $scope.showCreatePage = function() {
+         $location.path('/films/create');
+    }
+
+    $scope.showLoginPage = function() {
+         $location.path('/login');
     }
 
     $scope.refresh = function(){
@@ -62,7 +103,13 @@ filmListAppControllers.controller('MainController', ['$scope', '$location', 'use
           $scope.viewby = 1;
 		  $scope.totalItems = $scope.films.length;
 		  console.log($scope.totalItems);
-		  $scope.currentPage = 1;
+          if(userService.getCurrentToken()) {
+              $scope.isLoggedIn =true;
+                console.log($scope.isLoggedIn);
+            
+          }
+          console.log(userService.getCurrentToken());
+          $scope.currentPage = 1;
 		  $scope.itemsPerPage = $scope.viewby;
 		  $scope.maxSize = 3; //Number of pager buttons to show
 
@@ -79,10 +126,6 @@ filmListAppControllers.controller('MainController', ['$scope', '$location', 'use
 			  $scope.currentPage = 1; //reset to first page
 			}
           /*End*/ 
-
-         
-
-        
         }, function(){
             
             alert('Some errors occurred while communicating with the service. Try again later.');
@@ -90,11 +133,7 @@ filmListAppControllers.controller('MainController', ['$scope', '$location', 'use
         });
 
     }
-    /*
-    if(!userService.checkIfLoggedIn())
-        $location.path('/login');
-     */   
-
+    
     $scope.films = [];
 
     $scope.refresh();
