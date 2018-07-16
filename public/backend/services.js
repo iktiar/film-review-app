@@ -121,10 +121,15 @@ bookWishlistAppServices.factory('bookService', ['Restangular', 'userService', fu
 
 	function create(data, onSuccess, onError){
 
-		Restangular.all('api/films').post(data).then(function(response){
+		Restangular.all('api/films/save').post(data).then(function(response){
+	        if(response.status =='success'){
 
-			onSuccess(response);
-		
+				onSuccess(response);
+			}
+			if(response.status =='error'){
+				onError(response);
+			}
+	
 		}, function(response){
 			
 			onError(response);

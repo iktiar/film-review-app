@@ -7,12 +7,9 @@ filmListAppControllers.controller('LoginController', ['$scope', '$http', '$locat
             $scope.email, $scope.password,
             function(response){
                 $scope.isLoggedIn = true;
-                console.log('isLoggedIn ..');
-                console.log($scope.isLoggedIn);
                 $location.path('/');
             },
             function(response){
-                console.log('Errpr on login ..');
                 $scope.message = response.message;
                 alert('Something went wrong with the login process. Try again later!');
             }
@@ -51,10 +48,9 @@ filmListAppControllers.controller('SignupController', ['$scope', '$location', 'u
 
 }]);
 
-filmListAppControllers.controller('CreateController', ['$scope', '$location', 'userService', function ($scope, $location, userService,) {
+filmListAppControllers.controller('CreateController', ['$scope', '$location', 'userService','bookService', function ($scope, $location, userService, bookService,) {
 
     $scope.create = function(){
- 
         bookService.create({
             name: $scope.name,
             description: $scope.description,
@@ -65,15 +61,16 @@ filmListAppControllers.controller('CreateController', ['$scope', '$location', 'u
             genre: $scope.genre,
             photo: $scope.photo
         }, function(){
-
+            console.log(response);
             $scope.refresh();
-
         }, function(){
 
-            alert('Some errors occurred while communicating with the service. Try again later.');
-
+            alert('Please input all valid inputs. Fields Validation Failed.');
         });
+    }
 
+    $scope.back = function(){
+        $location.path('/');
     }
 
 }]);
@@ -95,9 +92,7 @@ filmListAppControllers.controller('MainController', ['$scope', '$location', 'use
     }
 
     $scope.refresh = function(){
-
         bookService.getAll(function(response){
-            
           $scope.films = response;
           /*for pagination*/
           $scope.viewby = 1;
@@ -105,8 +100,6 @@ filmListAppControllers.controller('MainController', ['$scope', '$location', 'use
 		  console.log($scope.totalItems);
           if(userService.getCurrentToken()) {
               $scope.isLoggedIn =true;
-                console.log($scope.isLoggedIn);
-            
           }
           console.log(userService.getCurrentToken());
           $scope.currentPage = 1;
@@ -121,15 +114,13 @@ filmListAppControllers.controller('MainController', ['$scope', '$location', 'use
 		    console.log('Page changed to: ' + $scope.currentPage);
 		  };
 
-			$scope.setItemsPerPage = function(num) {
+		  $scope.setItemsPerPage = function(num) {
 			  $scope.itemsPerPage = num;
 			  $scope.currentPage = 1; //reset to first page
-			}
+		  };
           /*End*/ 
         }, function(){
-            
             alert('Some errors occurred while communicating with the service. Try again later.');
-        
         });
 
     }
