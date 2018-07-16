@@ -1,6 +1,7 @@
 var filmListApp = angular.module('filmListApp', [
   'ngRoute',
-  'filmListAppControllers'
+  'filmListAppControllers',
+  'ui.bootstrap'
 ]);
 
 filmListApp.config(['$routeProvider', function($routeProvider) {
@@ -10,8 +11,8 @@ filmListApp.config(['$routeProvider', function($routeProvider) {
         templateUrl: 'backend/partials/login.html',
         controller: 'LoginController'
     }).
-    when('/signup', {
-        templateUrl: 'backend/partials/signup.html',
+    when('/registration', {
+        templateUrl: 'backend/partials/registration.html',
         controller: 'SignupController'
     }).
     when('/', {

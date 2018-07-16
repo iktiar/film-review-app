@@ -38,12 +38,19 @@ class FilmController extends ApiController
      */
     public function index(){
 
+       return Film::with('user')
+              ->get()
+              ->toArray();
+
+
         $limit = Input::get('limit') ?: 3;
 
         $films = Film::with('user')->paginate($limit);
         
+
+
         return $this->respondWithPagination($films, [
-            'Films' => $this->filmTransformer->transformCollection($films->all())
+            'films' => $this->filmTransformer->transformCollection($films->all())
         ], 'Records Found!');
         
     }
