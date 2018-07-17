@@ -7,7 +7,6 @@
 
 <hr>
 
-
 <div class="row">
     <div class="col-md-12">
         <p>{{ isLoggedIn }} You currently have <b>{{ films.length }}</b> films in your wishlist.</p>
@@ -34,8 +33,19 @@
                 <i>{{ film.ticket_price }}</i>
                 <br>
                 <label><b>created_at</b></label>
-                <i>{{ film.created_at}}
-
+                <i>{{ film.created_at}}</i>
+                <p><b>Comments:</b>
+                  <ul>
+                      <li ng-repeat="comment in  film.comments">
+                        <i>{{ comment.comment}}</i>
+                        <br>
+                        <i><b>{{comment.name}}</b></i>
+                        <br>
+                        <i>{{ comment.created_at}}</i>
+                        <br>
+                      </li>
+                  </ul>
+                </p>
             </li>
         </ul>
        

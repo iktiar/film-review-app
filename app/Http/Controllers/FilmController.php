@@ -38,7 +38,7 @@ class FilmController extends ApiController
      */
     public function index(){
 
-       return Film::with('user')
+       return Film::with('user','comments')
               ->get()
               ->toArray();
 
