@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Film;
+use App\Genre;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use JWTAuth;
@@ -42,16 +43,7 @@ class FilmController extends ApiController
               ->get()
               ->toArray();
 
-
-        $limit = Input::get('limit') ?: 3;
-
-        $films = Film::with('user')->paginate($limit);
         
-
-
-        return $this->respondWithPagination($films, [
-            'films' => $this->filmTransformer->transformCollection($films->all())
-        ], 'Records Found!');
         
     }
 
@@ -142,5 +134,16 @@ class FilmController extends ApiController
 
     }
 
+    /*
+    Get Film genres by Query
+    */
+    public function getGenres($query){
+
+        return  Genre::select('display_name as text')
+                ->where('display_name', $query)
+                ->orWhere('name', 'like', '%' . $query . '%')->get()
+                ->toArray();
+
+    }
     
 }

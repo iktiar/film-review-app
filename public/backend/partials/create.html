@@ -3,15 +3,26 @@
         <h2>Create new film</h2>
         
         <p><input class="form-control" ng-model="name" placeholder="Name" type="text"></p>
-        <p><input class="form-control" ng-model="description" placeholder="Description" type="text"></p>
-        <p><input class="form-control" ng-model="ticket_price" placeholder="ticket price" type="text"></p>
-        <p><input class="form-control" ng-model="release_date" placeholder="release date" type="text"></p>
-        <p><input class="form-control" ng-model="country" placeholder="country" type="text"></p> 
-        <p ng-show="loading">Loading..</p>
-        <select ng-model="selectedCountry" ng-options="country.countryName for country in countryList">
-        </select>
-        <p><input class="form-control" ng-model="rating" placeholder="rating" type="text"></p>
-        
+        <p>Description
+            <input class="form-control" ng-model="description" placeholder="Description" type="text">
+        </p>
+        <p><input class="form-control" ng-model="ticket_price" placeholder="ticket price" type="number"></p>
+
+        <p>Release date 
+            <input class="form-control" ng-model="release_date" placeholder="release date" type="date" required></p>
+        </p>    
+        <p>Country 
+            <p ng-show="loading">Loading..</p>
+            <select class="form-control" ng-model="country" ng-options="country.countryName for country in countryList">
+            </select>
+        </p>
+
+        <p><input class="form-control" ng-model="rating" placeholder="rating 1 t0 5" type="number" min="1" max="5"></p>
+        <tags-input  ng-model="tags" use-strings="true">
+          <auto-complete source="loadTags($query)"></auto-complete>
+        </tags-input>
+        <p>{{tags}}</p>
+
         <p><button type="button" class="btn btn-success form-control" ng-click="create()">Create</button></p>
         <p><button type="button" class="btn btn-success form-control" ng-click="back()">Back</button></p>
 

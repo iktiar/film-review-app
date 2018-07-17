@@ -53,11 +53,15 @@ filmListAppControllers.controller('CreateController', ['$scope', '$location', 'u
     $http.get('http://api.geonames.org/countryInfoJSON?username=iktiar').
         then(function(response) {
             $scope.countryList = response.data.geonames; 
-            console.log($scope.countrylist);
             $scope.loading = false;
         }, function(response) {
             console.log(response);
         });
+    
+    
+    $scope.loadTags = function(query) {
+      return $http.get('api/geners/'+query);
+    };
 
     $scope.create = function(){
         bookService.create({
@@ -105,11 +109,9 @@ filmListAppControllers.controller('MainController', ['$scope', '$location', 'use
           /*for pagination*/
           $scope.viewby = 1;
 		  $scope.totalItems = $scope.films.length;
-		  console.log($scope.totalItems);
-          if(userService.getCurrentToken()) {
+		  if(userService.getCurrentToken()) {
               $scope.isLoggedIn =true;
           }
-          console.log(userService.getCurrentToken());
           $scope.currentPage = 1;
 		  $scope.itemsPerPage = $scope.viewby;
 		  $scope.maxSize = 3; //Number of pager buttons to show
@@ -130,9 +132,7 @@ filmListAppControllers.controller('MainController', ['$scope', '$location', 'use
         }, function(){
             alert('Some errors occurred while communicating with the service. Try again later.');
         });
-
     }
-    
     $scope.films = [];
 
     $scope.refresh();

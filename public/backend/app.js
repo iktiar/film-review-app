@@ -2,7 +2,7 @@ var filmListApp = angular.module('filmListApp', [
   'ngRoute',
   'filmListAppControllers',
   'ui.bootstrap',
-  '720kb.datepicker'
+  'ngTagsInput'
 ]);
 
 filmListApp.config(['$routeProvider', function($routeProvider) {

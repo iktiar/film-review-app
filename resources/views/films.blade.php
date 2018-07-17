@@ -15,14 +15,13 @@
         <script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
         <script src="bower_components/restangular/dist/restangular.min.js"></script>
         <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-        
-        <link href="bower_components/angularjs-datepicker/src/css/angular-datepicker.css" rel="stylesheet" type="text/css" /> 
-
+        <script src="http://mbenford.github.io/ngTagsInput/js/ng-tags-input.min.js"></script>
         <script src="backend/app.js"></script>
         <script src="backend/controllers.js"></script>
         <script src="backend/services.js"></script>
-        
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="http://mbenford.github.io/ngTagsInput/css/ng-tags-input.min.css" />
+        <link href="bower_components/angular-input-stars-directive/angular-input-stars.css" rel="stylesheet" type="text/css" />
     </head>
 
     <body>
@@ -38,6 +37,6 @@
 
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="bower_components/angularjs-datepicker/src/js/angular-datepicker.js"></script> 
+       
     </body>
 </html>

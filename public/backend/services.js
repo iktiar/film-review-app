@@ -76,15 +76,7 @@ bookWishlistAppServices.factory('userService', ['$http', 'localStorageService', 
 		});
 	}
 
-	function getCountryList(){
-        $http.get('http://api.geonames.org/countryInfoJSON?username=iktiar').
-		then(function(response) {
-			return response;
-		}, function(response) {
-            return response;
-		});
-	}
-
+	
 	function getCurrentToken(){
 		return localStorageService.get('token');
 	}
@@ -94,8 +86,7 @@ bookWishlistAppServices.factory('userService', ['$http', 'localStorageService', 
 		signup: signup,
 		login: login,
 		logout: logout,
-		getCurrentToken: getCurrentToken,
-		getCountryList: getCountryList
+		getCurrentToken: getCurrentToken
 	}
 
 }]);
