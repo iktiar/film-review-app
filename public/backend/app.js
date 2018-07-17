@@ -1,7 +1,8 @@
 var filmListApp = angular.module('filmListApp', [
   'ngRoute',
   'filmListAppControllers',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  '720kb.datepicker'
 ]);
 
 filmListApp.config(['$routeProvider', function($routeProvider) {

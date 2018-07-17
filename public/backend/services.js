@@ -74,8 +74,15 @@ bookWishlistAppServices.factory('userService', ['$http', 'localStorageService', 
 		}, function(response) {
 
 		});
-		
+	}
 
+	function getCountryList(){
+        $http.get('http://api.geonames.org/countryInfoJSON?username=iktiar').
+		then(function(response) {
+			return response;
+		}, function(response) {
+            return response;
+		});
 	}
 
 	function getCurrentToken(){
@@ -87,13 +94,13 @@ bookWishlistAppServices.factory('userService', ['$http', 'localStorageService', 
 		signup: signup,
 		login: login,
 		logout: logout,
-		getCurrentToken: getCurrentToken
+		getCurrentToken: getCurrentToken,
+		getCountryList: getCountryList
 	}
 
 }]);
 
-bookWishlistAppServices.factory('bookService', ['Restangular', 'userService', function(Restangular, userService) {
-
+bookWishlistAppServices.factory('bookService', ['Restangular', 'userService', '$http', function(Restangular, userService, $http) {
 	function getAll(onSuccess, onError){
 		Restangular.all('api/films').getList().then(function(response){
            onSuccess(response);
@@ -165,6 +172,8 @@ bookWishlistAppServices.factory('bookService', ['Restangular', 'userService', fu
 		});
 	}
 
+   
+   
 	Restangular.setDefaultHeaders({ 'Authorization' : 'Bearer ' + userService.getCurrentToken() });
 
 	return {

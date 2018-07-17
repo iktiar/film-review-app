@@ -48,7 +48,16 @@ filmListAppControllers.controller('SignupController', ['$scope', '$location', 'u
 
 }]);
 
-filmListAppControllers.controller('CreateController', ['$scope', '$location', 'userService','bookService', function ($scope, $location, userService, bookService,) {
+filmListAppControllers.controller('CreateController', ['$scope', '$location', 'userService','bookService', '$http', function ($scope, $location, userService, bookService, $http,) {
+    $scope.loading = true;
+    $http.get('http://api.geonames.org/countryInfoJSON?username=iktiar').
+        then(function(response) {
+            $scope.countryList = response.data.geonames; 
+            console.log($scope.countrylist);
+            $scope.loading = false;
+        }, function(response) {
+            console.log(response);
+        });
 
     $scope.create = function(){
         bookService.create({
@@ -64,7 +73,6 @@ filmListAppControllers.controller('CreateController', ['$scope', '$location', 'u
             console.log(response);
             $scope.refresh();
         }, function(){
-
             alert('Please input all valid inputs. Fields Validation Failed.');
         });
     }
@@ -75,7 +83,7 @@ filmListAppControllers.controller('CreateController', ['$scope', '$location', 'u
 
 }]);
 
-filmListAppControllers.controller('MainController', ['$scope', '$location', 'userService', 'bookService', function ($scope, $location, userService, bookService) {
+filmListAppControllers.controller('MainController', ['$scope', '$location', 'userService', 'bookService',  function ($scope, $location, userService, bookService) {
 
     $scope.logout = function(){
         userService.logout();
@@ -84,7 +92,7 @@ filmListAppControllers.controller('MainController', ['$scope', '$location', 'use
     }
 
     $scope.showCreatePage = function() {
-         $location.path('/films/create');
+        $location.path('/films/create');
     }
 
     $scope.showLoginPage = function() {

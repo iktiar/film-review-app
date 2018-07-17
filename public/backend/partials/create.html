@@ -6,7 +6,10 @@
         <p><input class="form-control" ng-model="description" placeholder="Description" type="text"></p>
         <p><input class="form-control" ng-model="ticket_price" placeholder="ticket price" type="text"></p>
         <p><input class="form-control" ng-model="release_date" placeholder="release date" type="text"></p>
-        <p><input class="form-control" ng-model="country" placeholder="country" type="text"></p>
+        <p><input class="form-control" ng-model="country" placeholder="country" type="text"></p> 
+        <p ng-show="loading">Loading..</p>
+        <select ng-model="selectedCountry" ng-options="country.countryName for country in countryList">
+        </select>
         <p><input class="form-control" ng-model="rating" placeholder="rating" type="text"></p>
         
         <p><button type="button" class="btn btn-success form-control" ng-click="create()">Create</button></p>
