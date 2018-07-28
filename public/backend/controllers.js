@@ -2,14 +2,14 @@ var filmListAppControllers = angular.module('filmListAppControllers', ['bookWish
 
 filmListAppControllers.controller('LoginController', ['$scope', '$http', '$location', 'userService', function ($scope, $http, $location, userService) {
 
-    $scope.login = function() {
+    $scope.login = function () {
         userService.login(
             $scope.email, $scope.password,
-            function(response){
+            function (response) {
                 $scope.isLoggedIn = true;
                 $location.path('/');
             },
-            function(response){
+            function (response) {
                 $scope.message = response.message;
                 alert('Something went wrong with the login process. Try again later!');
             }
@@ -19,17 +19,20 @@ filmListAppControllers.controller('LoginController', ['$scope', '$http', '$locat
     $scope.email = '';
     $scope.password = '';
 
-    if(userService.checkIfLoggedIn())
+    if (userService.checkIfLoggedIn())
         $location.path('/');
 
 }]);
 
 filmListAppControllers.controller('SignupController', ['$scope', '$location', 'userService', function ($scope, $location, userService,) {
 
-	$scope.signup = function() {
+    $scope.signup = function () {
         userService.signup(
             $scope.name, $scope.email, $scope.password,
-            function(response){
+            function (response) {
+                if(response.status=='error'){
+                    alert(response.data);
+                }
                 alert('Great! You are now signed in! Welcome, ' + $scope.name + '!');
                 $location.path('/');
             },
@@ -43,93 +46,87 @@ filmListAppControllers.controller('SignupController', ['$scope', '$location', 'u
     $scope.email = '';
     $scope.password = '';
 
-    if(userService.checkIfLoggedIn())
+    if (userService.checkIfLoggedIn())
         $location.path('/');
 
 }]);
 
-filmListAppControllers.controller('CreateController', ['$scope', '$location', 'userService','bookService', '$http', function ($scope, $location, userService, bookService, $http,) {
+filmListAppControllers.controller('CreateController', ['$scope', '$location', 'userService', 'bookService', '$http', function ($scope, $location, userService, bookService, $http,) {
     $scope.loading = true;
     $http.get('http://api.geonames.org/countryInfoJSON?username=iktiar').
-        then(function(response) {
-            $scope.countryList = response.data.geonames; 
+        then(function (response) {
+            $scope.countryList = response.data.geonames;
             $scope.loading = false;
-        }, function(response) {
+        }, function (response) {
             console.log(response);
         });
-    
-    
-    $scope.loadTags = function(query) {
-      return $http.get('api/geners/'+query);
+
+    $scope.loadTags = function (query) {
+        return $http.get('api/geners/' + query);
     };
 
-    $scope.create = function(){
-        bookService.create({
-            name: $scope.name,
-            description: $scope.description,
-            ticket_price: $scope.ticket_price,
-            rating: $scope.rating,
-            release_date: $scope.release_date,
-            country: $scope.country,
-            genre: $scope.genre,
-            photo: $scope.photo
-        }, function(){
-            console.log(response);
-            $scope.refresh();
-        }, function(){
-            alert('Please input all valid inputs. Fields Validation Failed.');
-        });
+    $scope.submitForm = function () {
+        $scope.form.country = $scope.form.countryList.countryName;
+        $scope.form.access_token = userService.getCurrentToken();
+        bookService.create(
+            $scope.form
+            , function () {
+                console.log(response);
+                $scope.refresh();
+            }, function () {
+                alert('Please input all valid inputs. Fields Validation Failed.');
+            });
     }
 
-    $scope.back = function(){
+    $scope.back = function () {
         $location.path('/');
     }
 
 }]);
 
-filmListAppControllers.controller('MainController', ['$scope', '$location', 'userService', 'bookService',  function ($scope, $location, userService, bookService) {
+filmListAppControllers.controller('MainController', ['$scope', '$location', 'userService', 'bookService', function ($scope, $location, userService, bookService) {
 
-    $scope.logout = function(){
+    $scope.logout = function () {
         userService.logout();
         $scope.isLoggedIn = false;
         $location.path('/login');
     }
 
-    $scope.showCreatePage = function() {
+    $scope.showCreatePage = function () {
         $location.path('/films/create');
     }
 
-    $scope.showLoginPage = function() {
-         $location.path('/login');
+    $scope.showLoginPage = function () {
+        $location.path('/login');
     }
 
-    $scope.refresh = function(){
-        bookService.getAll(function(response){
-          $scope.films = response;
-          /*for pagination*/
-          $scope.viewby = 1;
-		  $scope.totalItems = $scope.films.length;
-		  if(userService.getCurrentToken()) {
-              $scope.isLoggedIn =true;
-          }
-          $scope.currentPage = 1;
-		  $scope.itemsPerPage = $scope.viewby;
-		  $scope.maxSize = 3; //Number of pager buttons to show
+    $scope.refresh = function () {
+        bookService.getAll(function (response) {
+            $scope.films = response;
+            /*for pagination*/
+            $scope.viewby = 1;
+            $scope.totalItems = $scope.films.length;
+            if (userService.getCurrentToken()) {
+                $scope.isLoggedIn = true;
+            }
+            $scope.currentPage = 1;
+            $scope.itemsPerPage = $scope.viewby;
+            $scope.maxSize = 3; //Number of pager buttons to show
 
-		  $scope.setPage = function (pageNo) {
-		    $scope.currentPage = pageNo;
-		  };
+            $scope.setPage = function (pageNo) {
+                $scope.currentPage = pageNo;
+            };
 
-		  $scope.pageChanged = function() {
-		    console.log('Page changed to: ' + $scope.currentPage);
-		  };
+            $scope.pageChanged = function () {
+                console.log('Page changed to: ' + $scope.currentPage);
+            };
 
-		  $scope.setItemsPerPage = function(num) {
-			  $scope.itemsPerPage = num;
-			  $scope.currentPage = 1; //reset to first page
-		  };
-          /*End*/ 
-        }, function(){
+            $scope.setItemsPerPage = function (num) {
+                $scope.itemsPerPage = num;
+                $scope.currentPage = 1; //reset to first page
+            };
+            /*End*/
+        }, function () {
             alert('Some errors occurred while communicating with the service. Try again later.');
         });
     }

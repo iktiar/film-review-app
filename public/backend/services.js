@@ -53,7 +53,7 @@ bookWishlistAppServices.factory('userService', ['$http', 'localStorageService', 
                 onSuccess(response);
 			}
 		}, function(response) {
-
+                onError(response);
 		});
 
 	}
@@ -61,19 +61,19 @@ bookWishlistAppServices.factory('userService', ['$http', 'localStorageService', 
 	function logout(){
         $http.get('/api/v1/logout/'+getCurrentToken()).
 		then(function(response) {
-            if(response.data.status =='error')
-            {   console.log('logout error');
 
-            	onError(response);
-            }
 			if(response.data.status =='success'){
 				console.log('logout ok');
-				localStorageService.remove('token');
-                onSuccess(response);
-			}
-		}, function(response) {
+                localStorageService.remove('token');
 
-		});
+          	}else {
+                console.log('logout error');
+                localStorageService.remove('token');
+            }
+		}, function(response) {
+                onError(response);
+
+            });
 	}
 
 	
@@ -91,7 +91,7 @@ bookWishlistAppServices.factory('userService', ['$http', 'localStorageService', 
 
 }]);
 
-bookWishlistAppServices.factory('bookService', ['Restangular', 'userService', '$http', function(Restangular, userService, $http) {
+bookWishlistAppServices.factory('bookService', ['Restangular', 'userService', '$http', '$location', function(Restangular, userService, $http, $location) {
 	function getAll(onSuccess, onError){
 		Restangular.all('api/films').getList().then(function(response){
            onSuccess(response);
@@ -125,6 +125,11 @@ bookWishlistAppServices.factory('bookService', ['Restangular', 'userService', '$
 				onSuccess(response);
 			}
 			if(response.status =='error'){
+                if(response.message == 'Token has expired')
+                {
+                    alert(response.message);
+                    $location.path('/');
+                }
 				onError(response);
 			}
 	
@@ -162,9 +167,6 @@ bookWishlistAppServices.factory('bookService', ['Restangular', 'userService', '$
 
 		});
 	}
-
-   
-   
 	Restangular.setDefaultHeaders({ 'Authorization' : 'Bearer ' + userService.getCurrentToken() });
 
 	return {
@@ -176,3 +178,19 @@ bookWishlistAppServices.factory('bookService', ['Restangular', 'userService', '$
 	}
 
 }]);
+
+
+bookWishlistAppServices.factory('httpPostFactory', function($http) {
+  return function(file, data, callback) {
+    $http({
+      url: file,
+      method: "POST",
+      data: data,
+      headers: {
+        'Content-Type': undefined
+      }
+    }).success(function(response) {
+      callback(response);
+    });
+  };
+});

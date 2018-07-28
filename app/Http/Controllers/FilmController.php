@@ -42,9 +42,6 @@ class FilmController extends ApiController
        return Film::with('user','comments')
               ->get()
               ->toArray();
-
-        
-        
     }
 
     /**
@@ -83,12 +80,9 @@ class FilmController extends ApiController
      * @return: Json String response
      */
     public function store(Request $request){
-
+        \DB::enableQueryLog();
         $rules = array (
-
-            'api_token' => 'required',
             'name' => 'required',
-            'slug' => 'required|unique:films',
             'description' => 'required',
             'release_date' => 'required',
             'rating' => 'integer|required',
@@ -105,16 +99,21 @@ class FilmController extends ApiController
 
         }
 
-        $api_token = $request['api_token'];
+       $api_token = $request['access_token'];
+       $slug      = $this->getSlug($request['name']);
+
+       $film_genre_ids = [];
+
+       if(!empty($request['geners'])) {
+           $film_genre_ids = $this->getGenreIdList($request['geners']);
+       }
 
         try{
-
             $user = JWTAuth::toUser($api_token);
-
             $film = new Film();
             $film->user_id = $user->id;
             $film->name = $request['name'];
-            $film->slug = $request['slug'];
+            $film->slug = $slug;
             $film->description = $request['description'];
             $film->release_date = $request['release_date'];
             $film->rating = $request['rating'];
@@ -123,10 +122,14 @@ class FilmController extends ApiController
             $film->photo = $request['photo'];
             $film->save();
 
+            //saving/updating the related Genres in the fashion of many to many relationship
+            $film->genres()->sync($film_genre_ids);
             return $this->respondCreated('Film created successfully!', 
             	   $this->filmTransformer->transform($film));
 
         }catch(JWTException $e){
+
+            return $this->respondInternalError($e->getMessage());
 
             return $this->respondInternalError("An error occurred while performing an action!");
 
@@ -145,5 +148,42 @@ class FilmController extends ApiController
                 ->toArray();
 
     }
+
+    /*
+     * Get slug value
+     */
+     public function getSlug($filmName) {
+
+         $slug  = str_slug($filmName , "-");
+         // check to see if any other slugs exist that are the same & count them
+         $count = Film::whereRaw("slug LIKE '^{$slug}(-[0-9]+)?$'")->count();
+         //$laQuery = \DB::getQueryLog();
+         //return $laQuery;
+         // if other slugs exist that are the same, append the count to the slug
+         return $slug = $count ? "{$slug}-{$count}" : $slug;
+     }
+
+     /*
+      * Get genre list, insert if not exist.
+      * */
+      public function getGenreIdList($input_film_genres) {
+          $film_genre_ids = [];
+          if($input_film_genres){
+             foreach ($input_film_genres AS $film_genre){
+                  //if geners dose not exist in table, add it.
+                  //$gener_search = Genre::Where('name', $film_genre[1]);
+                  $existing_film_genre = Genre::whereRaw("name = '$film_genre'")->get()->first();
+                  if(count($existing_film_genre)){
+                      $film_genre_ids[] = $existing_film_genre->id;
+                  }else
+                  {
+                      $film_genre = Genre::create(['name' => strtolower($film_genre), 'display_name' => $film_genre]);
+                      $film_genre_ids[] = $film_genre->id;
+                  }
+              }
+
+              return $film_genre_ids;
+          }
+      }
     
 }

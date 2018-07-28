@@ -27,7 +27,9 @@ Route::get('/films', 'FilmController@index');
 Route::get('/films/{id}', 'FilmController@show');
 Route::post('/films/save', 'FilmController@store');
 Route::post('/films/update', 'FilmController@update');
+Route::post('/photo-upload/', 'FilmController@photoUpload');
 Route::get('/geners/{query}', 'FilmController@getGenres');
+
 
 Route::get('/articles', 'ArticleController@index');
 

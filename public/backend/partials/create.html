@@ -1,30 +1,46 @@
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
-        <h2>Create new film</h2>
-        
-        <p><input class="form-control" ng-model="name" placeholder="Name" type="text"></p>
-        <p>Description
-            <input class="form-control" ng-model="description" placeholder="Description" type="text">
-        </p>
-        <p><input class="form-control" ng-model="ticket_price" placeholder="ticket price" type="number"></p>
-
-        <p>Release date 
-            <input class="form-control" ng-model="release_date" placeholder="release date" type="date" required></p>
-        </p>    
-        <p>Country 
-            <p ng-show="loading">Loading..</p>
-            <select class="form-control" ng-model="country" ng-options="country.countryName for country in countryList">
-            </select>
-        </p>
-
-        <p><input class="form-control" ng-model="rating" placeholder="rating 1 t0 5" type="number" min="1" max="5"></p>
-        <tags-input  ng-model="tags" use-strings="true">
-          <auto-complete source="loadTags($query)"></auto-complete>
-        </tags-input>
-        <p>{{tags}}</p>
-
-        <p><button type="button" class="btn btn-success form-control" ng-click="create()">Create</button></p>
-        <p><button type="button" class="btn btn-success form-control" ng-click="back()">Back</button></p>
-
+        <form ng-submit="submitForm()" name="filmForm"  ng-controller="CreateController">
+            <h2>Add new film</h2>
+            <p>
+                <input class="form-control" ng-model="form.name" placeholder="Name" type="text" required>
+            </p>
+            <p>Description
+                <input class="form-control" ng-model="form.description" placeholder="Description" type="text" required>
+            </p>
+            <p>
+                <input class="form-control" ng-model="form.ticket_price" placeholder="ticket price" type="number" required>
+            </p>
+            <p>Release date 
+                <input class="form-control" ng-model="form.release_date" placeholder="release date" type="date" required></p>
+            </p>    
+            <p>Country 
+                <p ng-show="loading">Loading..</p>
+                <select class="form-control" ng-model="form.countryList" ng-options="country.countryName for country in countryList" required>
+                </select>
+                <input type="hidden" ng-model="form.country" value="{{form.countryList.countryName}}">
+                <input type="hidden" ng-model="form.access_token" value="">
+            </p>
+            <p>Rating
+                <input class="form-control" ng-model="form.rating" placeholder="rating 1 t0 5" type="number" min="1" max="5" required>
+            </p>
+            <p>Geners
+                <tags-input  ng-model="form.geners" use-strings="true" placeholder="Input tag..">
+                  <auto-complete source="loadTags($query)" required></auto-complete>
+                </tags-input>
+            </p>    
+            <p>{{geners}}</p>
+            <p>Photo
+              <div>
+                <input type="file" fileread="form.photo" />
+              </div>  
+            </p>    
+            <p>
+                <button type="submit" class="btn btn-danger">Submit</button>
+            </p>
+            <p>
+                <button type="button" class="btn btn-success" ng-click="back()">Back</button>
+            </p>
+        </form>
     </div>
 </div>

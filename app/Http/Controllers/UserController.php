@@ -196,7 +196,7 @@ class UserController extends ApiController
 
 
         }catch(JWTException $e){
-
+            return $e->getMessage();
             return $this->respondInternalError("An error occurred while performing an action!");
 
         }
