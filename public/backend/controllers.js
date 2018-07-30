@@ -51,7 +51,7 @@ filmListAppControllers.controller('SignupController', ['$scope', '$location', 'u
 
 }]);
 
-filmListAppControllers.controller('CreateController', ['$scope', '$location', 'userService', 'bookService', '$http', function ($scope, $location, userService, bookService, $http,) {
+filmListAppControllers.controller('CreateController', ['$scope', '$location', 'userService', 'bookService', '$http', '$filter', function ($scope, $location, userService, bookService, $http, $filter,) {
     $scope.loading = true;
     $http.get('http://api.geonames.org/countryInfoJSON?username=iktiar').
         then(function (response) {
@@ -68,11 +68,15 @@ filmListAppControllers.controller('CreateController', ['$scope', '$location', 'u
     $scope.submitForm = function () {
         $scope.form.country = $scope.form.countryList.countryName;
         $scope.form.access_token = userService.getCurrentToken();
+        $scope.form.photoname =  document.getElementById("photoname").value;
+        $scope.form.release_date = moment($scope.form.release_date).format('YYYY-MM-DD');
         bookService.create(
             $scope.form
-            , function () {
-                console.log(response);
-                $scope.refresh();
+            , function (response) {
+                if(response.status == 'success'){
+                    alert(response.message);
+                    $location.path('/films');
+                }
             }, function () {
                 alert('Please input all valid inputs. Fields Validation Failed.');
             });

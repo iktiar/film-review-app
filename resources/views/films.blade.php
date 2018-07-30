@@ -13,6 +13,7 @@
         <script src="bower_components/lodash/dist/lodash.min.js"></script>
         <script src="bower_components/angular-route/angular-route.min.js"></script>
         <script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
+        <script src="bower_components/moment/moment.js"></script>
         <script src="bower_components/restangular/dist/restangular.min.js"></script>
         <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
         <script src="http://mbenford.github.io/ngTagsInput/js/ng-tags-input.min.js"></script>

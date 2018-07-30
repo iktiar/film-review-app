@@ -12,8 +12,8 @@
                 <input class="form-control" ng-model="form.ticket_price" placeholder="ticket price" type="number" required>
             </p>
             <p>Release date 
-                <input class="form-control" ng-model="form.release_date" placeholder="release date" type="date" required></p>
-            </p>    
+                <input  class="form-control" ng-model="form.release_date" placeholder="release date" type="date" required></p>
+            </p>{{form.release_date}}
             <p>Country 
                 <p ng-show="loading">Loading..</p>
                 <select class="form-control" ng-model="form.countryList" ng-options="country.countryName for country in countryList" required>
@@ -32,9 +32,11 @@
             <p>{{geners}}</p>
             <p>Photo
               <div>
-                <input type="file" fileread="form.photo" />
-              </div>  
-            </p>    
+                <input type="file" fileread="form.photo" /> {{fileread}}
+                <input type="text" id="photoname" name="photoname" style="display: inline;" ng-model="form.photoname">
+                  {{form.photoname}}
+        </div>
+            </p>
             <p>
                 <button type="submit" class="btn btn-danger">Submit</button>
             </p>

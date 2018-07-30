@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use JWTAuth;
 use Response;
+use Storage;
+use Carbon\Carbon;
 use App\Repository\Transformers\FilmTransformer;
 use \Illuminate\Http\Response as Res;
 use Validator;
@@ -19,25 +21,19 @@ use Illuminate\Support\Facades\Input;
 class FilmController extends ApiController
 {
 
-    /**
-     * @var \App\Repository\Transformers\UserTransformer
-     * */
-    protected $filmTransformer;
+    protected $images_folder = "";
 
-
-    public function __construct(FilmTransformer $filmTransformer)
-    {
-
-        $this->filmTransformer = $filmTransformer;
-
+    public function __construct(){
+        $this->images_folder =  base_path() . '/public/img/films/';
     }
+
 
     /**
      * @description: view all Films
      * @param: null
      * @return: Json String response
      */
-    public function index(){
+    public function index() {
 
        return Film::with('user','comments')
               ->get()
@@ -108,6 +104,10 @@ class FilmController extends ApiController
            $film_genre_ids = $this->getGenreIdList($request['geners']);
        }
 
+        $image = str_replace('data:image/png;base64,', '', $request['photo']);
+        $imageName = sha1(time().time()).$request['photoname'];
+        $path = Storage::disk('uploads')->put($imageName, base64_decode($image));
+
         try{
             $user = JWTAuth::toUser($api_token);
             $film = new Film();
@@ -119,13 +119,13 @@ class FilmController extends ApiController
             $film->rating = $request['rating'];
             $film->ticket_price = $request['ticket_price'];
             $film->country = $request['country'];
-            $film->photo = $request['photo'];
+            $film->photo = $imageName;
+            $film->release_date =  $request['release_date'];
             $film->save();
 
             //saving/updating the related Genres in the fashion of many to many relationship
             $film->genres()->sync($film_genre_ids);
-            return $this->respondCreated('Film created successfully!', 
-            	   $this->filmTransformer->transform($film));
+            return $this->respondCreated('Film created successfully!');
 
         }catch(JWTException $e){
 
@@ -159,6 +159,7 @@ class FilmController extends ApiController
          $count = Film::whereRaw("slug LIKE '^{$slug}(-[0-9]+)?$'")->count();
          //$laQuery = \DB::getQueryLog();
          //return $laQuery;
+         $count++;
          // if other slugs exist that are the same, append the count to the slug
          return $slug = $count ? "{$slug}-{$count}" : $slug;
      }
@@ -185,5 +186,5 @@ class FilmController extends ApiController
               return $film_genre_ids;
           }
       }
-    
+
 }

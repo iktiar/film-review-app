@@ -41,7 +41,10 @@ filmListApp.directive("fileread", [function () {
                 reader.onload = function (loadEvent) {
                     scope.$apply(function () {
                         scope.fileread = loadEvent.target.result;
+                        document.getElementById("photoname").value =  element[0].files[0].name;
+
                     });
+
                 }
                 reader.readAsDataURL(changeEvent.target.files[0]);
             });
